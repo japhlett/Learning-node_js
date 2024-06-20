@@ -1,12 +1,25 @@
 import {createServer} from 'node:http';
-
-// define request handler
-
+import {unlink,writeFile} from 'node:fs';
 
 // create http server
 const server = createServer((req, res) => {
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.end('<h1>We have an HTTP Server<h1>');
+    console.log(req.url);
+    if (req.url.includes('create')) {
+        // create a file 
+        writeFile('./hello.html', '<h1>Learning Node.js</h1>', (err)=>{
+            console.log(err);
+            // Return response
+            res.writeHead(200, {'Content-Type': 'text/html'});
+            res.end('<h1>File added<h1>');
+        });
+    } else {
+        // delete file
+        unlink('/hello.html', ()=>{
+             // Return response
+             res.writeHead(200, {'Content-Type': 'text/html'});
+             res.end('<h1>File deleted<h1>');
+         });
+    }
 });
 
 // listen for incoming requests
